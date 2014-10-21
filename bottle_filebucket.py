@@ -26,6 +26,8 @@ secret_token = config['secret_token']
 certificate_path = config['certificate_path']
 private_key_path = config['private_key_path']
 destdir = config['destdir']
+host = config['host']
+port = config['port']
 
 
 class MySSLCherryPy(ServerAdapter):
@@ -75,4 +77,4 @@ if __name__ == '__main__':
             'openssl req -new -x509 -keyout %s -out %s -days 3650 -nodes -subj'
             ' "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com"' % (
                 private_key_path, certificate_path), shell=True)
-    run(app, host='localhost', port=8081, debug=True, server='mysslcherrypy')
+    run(app, host=host, port=port, debug=True, server='mysslcherrypy')
