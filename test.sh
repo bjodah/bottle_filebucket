@@ -19,3 +19,4 @@ if [[ `cat ../file2.txt` != `cat file1.txt` ]]; then
     exit 1
 fi
 echo "Test PASSED!"
+exit 0

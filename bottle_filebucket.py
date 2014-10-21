@@ -25,6 +25,7 @@ config = json.load(open('config.json'))
 secret_token = config['secret_token']
 certificate_path = config['certificate_path']
 private_key_path = config['private_key_path']
+destdir = config['destdir']
 
 
 class MySSLCherryPy(ServerAdapter):
@@ -62,7 +63,7 @@ def upload():
             if char in fileobj.filename:
                 return {"success": False,
                         "error": "Invalid characters in filename"}
-        open(filename, 'wb').write(fileobj.file.read())
+        open(os.path.join(destdir, filename), 'wb').write(fileobj.file.read())
 
     return {"success": True}
 
