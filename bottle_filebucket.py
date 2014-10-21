@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Server which let's you upload files securely over https.
+Server which lets you upload files securely over https.
 
 On your server (after having installed cherrypy and edited conf.json):
 
@@ -9,9 +9,11 @@ On your server (after having installed cherrypy and edited conf.json):
 
 On your client:
 
-    $ curl -i -X PUT -F token=BLS4G66XHBGOI -F filename=Test.pdf -F filedata=@SomeFile.pdf --insecure "https://localhost:8081/upload"
+    $ curl -i -X PUT -F token=BLS4G66XHBGOI -F filename=Test.pdf -F \
+filedata=@SomeFile.pdf --insecure "https://localhost:8081/upload"
 
-Bottle/HTTPS solution based on: http://dgtool.blogspot.se/2011/12/ssl-encryption-in-python-bottle.html
+Bottle/HTTPS solution based on:
+http://dgtool.blogspot.se/2011/12/ssl-encryption-in-python-bottle.html
 """
 
 import json
@@ -33,7 +35,8 @@ class MySSLCherryPy(ServerAdapter):
 
         # If cert variable is has a valid path, SSL will be used
         # You can set it to None to disable SSL
-        server.ssl_adapter = BuiltinSSLAdapter(certificate_path, private_key_path)
+        server.ssl_adapter = BuiltinSSLAdapter(
+            certificate_path, private_key_path)
         # server.ssl_adapter.private_key =
         # server.ssl_adapter.certificate = certificate_path
         try:
@@ -44,6 +47,7 @@ class MySSLCherryPy(ServerAdapter):
 server_names['mysslcherrypy'] = MySSLCherryPy
 
 app = Bottle()
+
 
 @app.route("/upload", method='PUT')
 def upload():
@@ -56,14 +60,18 @@ def upload():
         filename = request.forms.get("filename", fileobj.filename)
         for char in r"^[^<>/{}[\]~`]*$":
             if char in fileobj.filename:
-                return {"success": False, "error": "Invalid characters in filename"}
+                return {"success": False,
+                        "error": "Invalid characters in filename"}
         open(filename, 'wb').write(fileobj.file.read())
 
     return {"success": True}
 
 
 if __name__ == '__main__':
-    if not os.path.exists(certificate_path) and not os.path.exists(private_key_path):
-        subprocess.check_call('openssl req -new -x509 -keyout %s -out %s -days 3650 -nodes -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com"' % (
-            private_key_path, certificate_path), shell=True)
+    if not os.path.exists(certificate_path) and\
+       not os.path.exists(private_key_path):
+        subprocess.check_call(
+            'openssl req -new -x509 -keyout %s -out %s -days 3650 -nodes -subj'
+            ' "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com"' % (
+                private_key_path, certificate_path), shell=True)
     run(app, host='localhost', port=8081, debug=True, server='mysslcherrypy')
