@@ -1,4 +1,7 @@
 {"secret_token": "BLS4G66XHBGOI",
 "certificate_path": "bottle_filebucket.crt",
-"private_key_path": "bottle_filebucket.pem"
+"private_key_path": "bottle_filebucket.pem",
+"destdir": ".",
+"host": "localhost",
+"port": 8081
 }
