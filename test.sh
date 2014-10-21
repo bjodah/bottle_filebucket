@@ -1,5 +1,6 @@
 #!/bin/bash
-python bottle_filebucket.py &
+#openssl req -new -x509 -keyout bottle_filebucket.pem -out bottle_filebucket.crt -days 3650 -nodes 
+python3 bottle_filebucket.py &
 PID=$!
 sleep 3 # give the server a chance to start
 mkdir temp/

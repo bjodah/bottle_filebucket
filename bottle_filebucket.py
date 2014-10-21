@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Server which let's you upload files securely over https.
@@ -64,6 +64,6 @@ def upload():
 
 if __name__ == '__main__':
     if not os.path.exists(certificate_path) and not os.path.exists(private_key_path):
-        subprocess.check_call("openssl req -new -x509 -keyout %s -out %s -days 3650 -nodes" % (
+        subprocess.check_call('openssl req -new -x509 -keyout %s -out %s -days 3650 -nodes -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com"' % (
             private_key_path, certificate_path), shell=True)
-    run(host='localhost', port=8081, debug=True, server='mysslcherrypy')
+    run(app, host='localhost', port=8081, debug=True, server='mysslcherrypy')
