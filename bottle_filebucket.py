@@ -5,7 +5,7 @@ Server which lets you upload files securely over https.
 
 On your server (after having installed cherrypy and edited conf.json):
 
-    $ nohup python bottle_filebucket.py &
+    $ nohup python3 bottle_filebucket.py &
 
 On your client:
 
@@ -23,8 +23,8 @@ from bottle import route, run, request, Bottle, server_names, ServerAdapter
 
 config = json.load(open('config.json'))
 secret_token = config['secret_token']
-certificate_path = config['certificate_path']
-private_key_path = config['private_key_path']
+cert_path = config['certificate_path']
+priv_key_path = config['private_key_path']
 destdir = config['destdir']
 host = config['host']
 port = config['port']
@@ -35,13 +35,7 @@ class MySSLCherryPy(ServerAdapter):
         from cherrypy import wsgiserver
         from cherrypy.wsgiserver.ssl_builtin import BuiltinSSLAdapter
         server = wsgiserver.CherryPyWSGIServer((self.host, self.port), handler)
-
-        # If cert variable is has a valid path, SSL will be used
-        # You can set it to None to disable SSL
-        server.ssl_adapter = BuiltinSSLAdapter(
-            certificate_path, private_key_path)
-        # server.ssl_adapter.private_key =
-        # server.ssl_adapter.certificate = certificate_path
+        server.ssl_adapter = BuiltinSSLAdapter(cert_path, priv_key_path)
         try:
             server.start()
         finally:
@@ -71,10 +65,10 @@ def upload():
 
 
 if __name__ == '__main__':
-    if not os.path.exists(certificate_path) and\
-       not os.path.exists(private_key_path):
+    if not os.path.exists(cert_path) and\
+       not os.path.exists(priv_key_path):
         subprocess.check_call(
             'openssl req -new -x509 -keyout %s -out %s -days 3650 -nodes -subj'
             ' "/C=US/ST=Denial/L=Springfield/O=Dis/CN=www.example.com"' % (
-                private_key_path, certificate_path), shell=True)
+                priv_key_path, cert_path), shell=True)
     run(app, host=host, port=port, debug=True, server='mysslcherrypy')
