@@ -3,5 +3,8 @@
 "private_key_path": "bottle_filebucket.pem",
 "destdir": ".",
 "host": "localhost",
-"port": 8081
+"port": 8081,
+"upload_route": "/upload",
+"hooks": ["echo Someone uploaded a file named %(filename)s", 
+          "tail -n 1 %(filename)s > %(filename)s.tail1"]
 }
